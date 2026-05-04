@@ -9,13 +9,13 @@ st.set_page_config(
     layout="wide"
 )
 
-# 2. Sidebar para sa Logo at About Section
+# 2. Sidebar for Logo and About Section
 with st.sidebar:
-    # Palitan ang 'logo.png' ng actual filename ng logo niyo sa folder
+    # Replace 'logo.png' with your actual logo filename in the folder
     st.title("📂 COMSCA System")
     st.info("""
     **About this AI:**
-    Ang model na ito ay ginagamit para i-predict ang credit risk ng mga miyembro ng COMSCA gamit ang Machine Learning (KNN Algorithm).
+    This model is used to predict the credit risk of COMSCA members using Machine Learning (KNN Algorithm).
     """)
     st.markdown("---")
     st.write("🔧 **Developer Settings**")
@@ -23,21 +23,21 @@ with st.sidebar:
 
 # 3. Main Interface Header
 st.title("💰 Loan Risk Prediction & Analysis")
-st.write("Punan ang mga impormasyon sa ibaba para malaman ang risk level ng borrower.")
+st.write("Please provide the information below to determine the borrower's risk level.")
 
 # 4. Load the Model
 try:
     with open('model.pkl', 'rb') as f:
         model = pickle.load(f)
 except FileNotFoundError:
-    st.error("Error: 'model.pkl' not found. Pakisigurado na nasa iisang folder ang model at app.py.")
+    st.error("Error: 'model.pkl' not found. Please ensure the model file and app.py are in the same folder.")
 
-# 5. UI Layout gamit ang Columns para sa Inputs
+# 5. UI Layout using Columns for Inputs
 col1, col2 = st.columns(2)
 
 with col1:
     st.subheader("Financial Profile")
-    income = st.number_input("Monthly Income (₱)", min_value=0, value=5000, help="Kabuuang kita sa loob ng isang buwan.")
+    income = st.number_input("Monthly Income (₱)", min_value=0, value=5000, help="Total gross income per month.")
     loan = st.number_input("Requested Loan Amount (₱)", min_value=0, value=2500)
 
 with col2:
@@ -46,22 +46,22 @@ with col2:
     history = st.selectbox(
         "Credit History Status", 
         options=[0, 1], 
-        format_func=lambda x: "Good (May record ng pagbabayad)" if x==1 else "Bad/No Record"
+        format_func=lambda x: "Good (Existing payment record)" if x==1 else "Bad / No Existing Record"
     )
 
 st.markdown("---")
 
 # 6. Prediction Logic
 if st.button("🔍 Run Risk Analysis"):
-    # Siguraduhin na ang order ng features ay tugma sa training: Income, Loan, History, Age
+    # Ensure the order of features matches the training: Income, Loan, History, Age
     features = [[income, loan, history, age]]
     prediction = model.predict(features)
     
-    # Visual Feedback para sa Resulta
+    # Visual Feedback for the Result
     st.subheader("Prediction Result:")
     if prediction[0] == 'Low Risk':
         st.success(f"### Result: **{prediction[0]}** ✅")
-        st.write("Ang borrower ay may mataas na posibilidad na makapagbayad sa tamang oras.")
+        st.write("The borrower has a high probability of paying on time. This loan is recommended for approval.")
     else:
         st.error(f"### Result: **{prediction[0]}** ⚠️")
-        st.write("Babala: Ang borrower na ito ay itinuturing na high risk. Mag-ingat sa pag-approve.")
+        st.write("Warning: This borrower is considered high risk. Proceed with caution and conduct further verification.")
