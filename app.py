@@ -38,7 +38,7 @@ col1, col2 = st.columns(2)
 with col1:
     st.subheader("Financial Profile")
     income = st.number_input("Monthly Income (₱)", min_value=0, value=5000, help="Total gross income per month.")
-    loan = st.number_input("Requested Loan Amount (₱)", min_value=0, value=2500)
+    loan = st.number_input("Requested Loan Amount (₱)", min_value=0, value=3000)
 
 with col2:
     st.subheader("Borrower Details")
